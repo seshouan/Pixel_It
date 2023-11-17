@@ -1,28 +1,17 @@
-pragma solidity ^0.5.0;
+//SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.9;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v2.5.0/contracts/token/ERC721/ERC721Full.sol";
-import "./Simple_Auction.sol"
-
-contract Gallery is ERC721Full {
-    constructor() public ERC721Full("Certificate", "CERT") {}
-
-    function awardCertificate(address student, string memory tokenURI)
-        public
-        returns (uint256)
-    {
-        uint256 newCertificateId = totalSupply();
-        _mint(student, newCertificateId);
-        _setTokenURI(newCertificateId, tokenURI);
-
-        return newCertificateId;
-    }
-}
+import "./Auction.sol";
 
 contract Pixel_IT_deploy {
-    // create tokens for each image
+    constructor(address payable auction_creator) {
+        // create an instance of the Auction runner
+        NFTAuction auction = new NFTAuction();
 
-    // create a gallery instance for bidding
+        // mint the tokens for each digital art
+        uint256 tokenId = auction.mint("QmNxrj2mNLS7Jra2hHNH9sLjn9YtQDEgZmCYv4Eir3qVMV", auction_creator);
 
-    // save the address for the gallery
-
+        // create a listing for each digital art
+        auction.createAuctionListing(5, tokenId, 180);
+    }
 }

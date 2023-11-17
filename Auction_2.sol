@@ -1,10 +1,11 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721URIStorage.sol"
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol"
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/ReentrancyGuard.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-
-contract NFTAuction is ERC721URIStorage, ReentrancyGuard {
+contract NFTAuction is ERC721URIStorage, ERC721Enumerable, ReentrancyGuard {
 
     uint256 public tokenCounter;
     uint256 public listingCounter;
@@ -16,7 +17,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard {
 
     struct Listing {
         address seller;
-        string tokenId; //** changed from uint256
+        uint256 tokenId;
         uint256 price; // display price
 //        uint256 netPrice; // actual price
         uint256 startAt;
@@ -39,7 +40,6 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard {
         listingCounter = 0;
     }
 
-//** clarify with Kevin
     function mint(string memory tokenURI, address minterAddress) public returns (uint256) {
         tokenCounter++;
         uint256 tokenId = tokenCounter;
@@ -121,7 +121,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard {
     }
 
     function withdrawBid(uint256 listingId) public payable nonReentrant {
-        require(isAuctionExpired(listingId), 'auction must be ended');
+        require(!isAuctionOpen(listingId), 'auction must be ended');
         require(highestBidder[listingId] != msg.sender, 'highest bidder cannot withdraw bid');
 
         uint256 balance = bids[listingId][msg.sender];
@@ -129,20 +129,19 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard {
         _transferFund(payable(msg.sender), balance);
 
         emit WithdrawBid(listingId, msg.sender, balance);
-
     }
 
-    function isAuctionOpen(uint256 id) public view returns (bool) {
+    function isAuctionOpen(uint256 listingId) public view returns (bool) {
         return
-            listings[id].status == STATUS_OPEN &&
-            listings[id].endAt > block.timestamp;
+            listings[listingId].status == STATUS_OPEN &&
+            listings[listingId].endAt > block.timestamp;
     }
 
-
-    function isAuctionExpired(uint256 id) public view returns (bool) {
-        return listings[id].endAt <= block.timestamp;
+/*
+    function isAuctionExpired(uint256 listingId) public view returns (bool) {
+        return listings[listingId].endAt <= block.timestamp; //** seems to be an incorrect boolean check
     }
-
+*/
 
     function _transferFund(address payable to, uint256 amount) internal {
         if (amount == 0) {
@@ -153,6 +152,4 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard {
         (bool transferSent, ) = to.call{value: amount}("");
         require(transferSent, "Error, failed to send Ether");
     }
-
 }
-view rawauction.sol hosted with ❤ by GitHub
