@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.0;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/ReentrancyGuard.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.9/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "./ReentrancyGuard.sol";
+// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-contract NFTAuction is ERC721URIStorage, ERC721Enumerable, ReentrancyGuard {
+contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
 
     uint256 public tokenCounter;
     uint256 public listingCounter;
@@ -94,7 +94,7 @@ contract NFTAuction is ERC721URIStorage, ERC721Enumerable, ReentrancyGuard {
     }
 
 
-    function completeAuction(uint256 listingId) public payable nonReentrant {
+    function completeAuction(uint256 listingId) public payable nonReentrant  {
         require(!isAuctionOpen(listingId), 'auction is still open');
 
         Listing storage listing = listings[listingId];
