@@ -6,7 +6,7 @@ import "./ReentrancyGuard.sol";
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
-
+    
     uint256 public tokenCounter;
     uint256 public listingCounter;
 
@@ -14,6 +14,9 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
     uint8 public constant STATUS_CLOSED = 2;
 
     uint256 public minAuctionIncrement = 10; // 10 percent
+
+    address public test_from;
+    address public test_to;
 
     struct Listing {
         address seller;
@@ -52,7 +55,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
         return tokenId;
     }
 
-    function createAuctionListing (uint256 price, uint256 tokenId, uint256 durationInSeconds) public returns (uint256) {
+    function createAuctionListing (uint256 price, uint256 tokenId, uint256 durationInSeconds, address auction_creator) public returns (uint256) {
         listingCounter++;
         uint256 listingId = listingCounter;
 
@@ -60,7 +63,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
         uint256 endAt = startAt + durationInSeconds;
 
         listings[listingId] = Listing({
-            seller: msg.sender,
+            seller: auction_creator,
             tokenId: tokenId,
             price: price,
 //            netPrice: price,
@@ -69,9 +72,12 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
             endAt: endAt
         });
 
-        _transfer(msg.sender, address(this), tokenId);
+        test_from = msg.sender;
+        test_to = address(this);
 
-        emit AuctionCreated(listingId, msg.sender, price, tokenId, startAt, endAt);
+        _transfer(auction_creator, address(this), tokenId);
+
+        emit AuctionCreated(listingId, auction_creator, price, tokenId, startAt, endAt);
 
         return listingId;
     }
@@ -132,9 +138,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
     }
 
     function isAuctionOpen(uint256 listingId) public view returns (bool) {
-        return
-            listings[listingId].status == STATUS_OPEN &&
-            listings[listingId].endAt > block.timestamp;
+        return listings[listingId].status == STATUS_OPEN && (listings[listingId].endAt > block.timestamp);
     }
 
 /*
