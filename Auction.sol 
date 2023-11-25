@@ -15,8 +15,11 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
 
     uint256 public minAuctionIncrement = 10; // 10 percent
 
-    address public test_from;
-    address public test_to;
+    bool public test_open_status;
+    address public test_this;
+    address public test_sender;
+    address public test_winner;
+    address public test_seller;
 
     struct Listing {
         address seller;
@@ -65,17 +68,15 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
         listings[listingId] = Listing({
             seller: auction_creator,
             tokenId: tokenId,
-            price: price,
+            price: price * 1000000000000000000, // convert price to Eth
 //            netPrice: price,
             status: STATUS_OPEN,
             startAt: startAt,
             endAt: endAt
         });
 
-        test_from = msg.sender;
-        test_to = address(this);
-
         _transfer(auction_creator, address(this), tokenId);
+        require(isAuctionOpen(listingId), "auction is not open");
 
         emit AuctionCreated(listingId, auction_creator, price, tokenId, startAt, endAt);
 
@@ -83,7 +84,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
     }
 
     function bid(uint256 listingId) public payable nonReentrant {
-        require(isAuctionOpen(listingId), 'auction has ended');
+        require(isAuctionOpen(listingId), "auction has ended");
         Listing storage listing = listings[listingId];
         require(msg.sender != listing.seller, "cannot bid on what you own");
 
@@ -101,10 +102,16 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
 
 
     function completeAuction(uint256 listingId) public payable nonReentrant  {
-        require(!isAuctionOpen(listingId), 'auction is still open');
+        test_open_status = isAuctionOpen(listingId);
+        // require(!isAuctionOpen(listingId), "auction is still open");
 
         Listing storage listing = listings[listingId];
         address winner = highestBidder[listingId]; 
+        test_sender = msg.sender;
+        test_this = address(this);
+        test_seller = listing.seller;
+        test_winner = winner;
+
         require(
             msg.sender == listing.seller || msg.sender == winner, 
             'only seller or winner can complete auction'
@@ -127,7 +134,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
     }
 
     function withdrawBid(uint256 listingId) public payable nonReentrant {
-        require(!isAuctionOpen(listingId), 'auction must be ended');
+        // require(!isAuctionOpen(listingId), 'auction must be ended');
         require(highestBidder[listingId] != msg.sender, 'highest bidder cannot withdraw bid');
 
         uint256 balance = bids[listingId][msg.sender];
@@ -138,7 +145,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
     }
 
     function isAuctionOpen(uint256 listingId) public view returns (bool) {
-        return listings[listingId].status == STATUS_OPEN && (listings[listingId].endAt > block.timestamp);
+        return listings[listingId].endAt > block.timestamp;
     }
 
 /*
@@ -151,7 +158,7 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
         if (amount == 0) {
             return;
         }
-        require(to != address(0), 'Error, cannot transfer to address(0)');
+        require(to != address(0), "Error, cannot transfer to address(0)");
 
         (bool transferSent, ) = to.call{value: amount}("");
         require(transferSent, "Error, failed to send Ether");

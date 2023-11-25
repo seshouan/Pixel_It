@@ -17,6 +17,6 @@ contract Pixel_IT_deploy {
         // mint the tokens for each digital art
         uint256 tokenId = auction.mint(tokenURI, auction_creator);
         // // // create a listing for each digital art
-        auction.createAuctionListing(price, tokenId, 5, auction_creator);
+        auction.createAuctionListing(price, tokenId, 60, auction_creator);
     }
 }
