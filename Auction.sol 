@@ -15,12 +15,6 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
 
     uint256 public minAuctionIncrement = 10; // 10 percent
 
-    bool public test_open_status;
-    address public test_this;
-    address public test_sender;
-    address public test_winner;
-    address public test_seller;
-
     struct Listing {
         address seller;
         uint256 tokenId;
@@ -102,15 +96,11 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
 
 
     function completeAuction(uint256 listingId) public payable nonReentrant  {
-        test_open_status = isAuctionOpen(listingId);
-        // require(!isAuctionOpen(listingId), "auction is still open");
+        bool auction_closed = isAuctionOpen(listingId) == false;
+        // require(auction_closed, "auction is still open");
 
         Listing storage listing = listings[listingId];
         address winner = highestBidder[listingId]; 
-        test_sender = msg.sender;
-        test_this = address(this);
-        test_seller = listing.seller;
-        test_winner = winner;
 
         require(
             msg.sender == listing.seller || msg.sender == winner, 
@@ -134,7 +124,8 @@ contract NFTAuction is ERC721URIStorage, ReentrancyGuard{
     }
 
     function withdrawBid(uint256 listingId) public payable nonReentrant {
-        // require(!isAuctionOpen(listingId), 'auction must be ended');
+        bool auction_closed = isAuctionOpen(listingId) == false;
+        // require(auction_closed, "auction must be ended");
         require(highestBidder[listingId] != msg.sender, 'highest bidder cannot withdraw bid');
 
         uint256 balance = bids[listingId][msg.sender];
