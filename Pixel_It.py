@@ -7,7 +7,7 @@ import streamlit as st
 from typing import Any, List
 from dataclasses import dataclass
 
-load_dotenv("access.env")
+load_dotenv("keys.env")
 
 # Define and connect a new Web3 provider
 w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
