@@ -12,7 +12,7 @@ Alejandra Torres, Session Mwamufiya, Edward Arnold
 
 
 ### Presentation
-[Project 3](~%24Project_3-Group_3.pptx)
+[Project 3](Project_3-Group_3.pptx)
 
 ### Files
 
