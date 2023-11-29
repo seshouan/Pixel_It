@@ -8,10 +8,13 @@ ___
 Alejandra Torres, Session Mwamufiya, Edward Arnold
 ___
 
-
 ### Walk thru 
 
-<img src="IMAGE_PLACEHOLDER.png" alt="Baseline" width="600"/>
+
+
+
+https://github.com/seshouan/Pixel_It/assets/134439384/d57b13eb-d62e-4c44-9b05-6ad9fe006d3a
+
 
 
 ### Presentation
