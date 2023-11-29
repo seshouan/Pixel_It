@@ -12,8 +12,12 @@ ___
 
 
 
+https://github.com/seshouan/Pixel_It/assets/134439384/7512ed28-40f6-4341-b9b0-82f164013874
 
-https://github.com/seshouan/Pixel_It/assets/134439384/d57b13eb-d62e-4c44-9b05-6ad9fe006d3a
+
+
+
+
 
 
 
