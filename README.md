@@ -33,6 +33,7 @@ https://github.com/seshouan/Pixel_It/assets/134439384/7512ed28-40f6-4341-b9b0-82
 - https://web3py.readthedocs.io/en/stable/index.html
 - https://docs.openzeppelin.com/  
 - https://github.com/OpenZeppelin/openzeppelin-contracts
+- https://ututuv.medium.com/building-an-nft-auction-smart-contract-in-solidity-d55efcdbf783
 - UC Berkley Fintech Course Materials 
 
 ### Dependencies
