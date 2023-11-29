@@ -78,21 +78,14 @@ pkey=st.sidebar.text_input('Enter Private Key')
 st.sidebar.markdown("---")
 
 st.write("Input Bid Amount")
-bid_amount = st.slider("Select Account in Wei", 0,100)
+bid_amount = st.slider("Select Account in Eth", 0,100)
 st.write("Your bid amount is",bid_amount)
 st.markdown("---")
-# eth.contract.value= bid_amount
 
-# w3.to_wei(1,'ether')
-
-# st.write("Withdraw Bid")
-# bid_amount = st.slider("Select Account in Ether", 0,10000)
-# st.write("Your bid amount is",bid_amount)
-# st.markdown("---")
 if st.button('Bid'): 
     txn={'from': address, 
          # 'to': os.getenv("AUCTION_CONTRACT_ADDRESS"), 
-         'value': bid_amount, 
+         'value': bid_amount * 1000000000000000000, 
          'nonce': w3.eth.get_transaction_count(address)}
 
     call_function=contract.functions.bid(listing_id).build_transaction(txn)
@@ -103,5 +96,27 @@ if st.button('Bid'):
     st.write(receipt)
 
 #Complete Auction
+if st.button('Complete Auction'): 
+    txn={'from': address, 
+         # 'to': os.getenv("AUCTION_CONTRACT_ADDRESS"),  
+         'nonce': w3.eth.get_transaction_count(address)}
+
+    call_function=contract.functions.completeAuction(listing_id).build_transaction(txn)
+    signed_txn=w3.eth.account.sign_transaction(call_function, private_key=pkey)
+    sent_txn=w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+    receipt=w3.eth.wait_for_transaction_receipt(sent_txn)
+
+    st.write(receipt)
 
 #Withdraw
+if st.button('Withdraw Bid'): 
+    txn={'from': address, 
+         # 'to': os.getenv("AUCTION_CONTRACT_ADDRESS"),  
+         'nonce': w3.eth.get_transaction_count(address)}
+
+    call_function=contract.functions.withdrawBid(listing_id).build_transaction(txn)
+    signed_txn=w3.eth.account.sign_transaction(call_function, private_key=pkey)
+    sent_txn=w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+    receipt=w3.eth.wait_for_transaction_receipt(sent_txn)
+
+    st.write(receipt)
