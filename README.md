@@ -7,19 +7,13 @@ ___
 ### Team Members  
 Alejandra Torres, Session Mwamufiya, Edward Arnold
 ___
+### Project Approach
 
-### Walk thru 
+![Screenshot 2023-11-28 at 9 29 17 PM](https://github.com/seshouan/Pixel_It/assets/134439384/93f6f8e5-a099-4f22-83a1-c7c5dc25943b)
 
-
+### Demostration 
 
 https://github.com/seshouan/Pixel_It/assets/134439384/7512ed28-40f6-4341-b9b0-82f164013874
-
-
-
-
-
-
-
 
 ### Presentation
 [Project 3 Group 3 PowerPoint Presentation](Project_3-Group_3.pptx)
