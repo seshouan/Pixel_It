@@ -1,5 +1,5 @@
 # Pixel_It
-A digital art auction gallery that combines contributor pictures and AI-gererated works, and provides a platform for winning bids to claim verifiable ownership of their art.
+A digital art auction gallery that combines contributor pictures and AI-generated works, and provides a platform for winning bids to claim verifiable ownership of their art.
  
 UC Berkeley Fintech: Group project using Ethereum Blockchain to organize transcations for an online digital auction.
 ___
